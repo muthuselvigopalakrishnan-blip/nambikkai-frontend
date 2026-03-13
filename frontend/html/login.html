@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Nambikkai</title>
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+  <!-- LOGIN NAVBAR -->
+  <header class="header">
+    <div class="logo">NAMBIKKAI</div>
+    <nav class="nav-links">
+      <a href="../../index.html">Home</a>
+      <a href="ngo_list.html">NGO's</a>
+      <a href="lawyer_list.html">Lawyers</a>
+      <a href="book_appointment.html">Book Appointment</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+  <!-- LOGIN FORM -->
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" placeholder="Enter your email" required>
+      <input type="password" placeholder="Enter your password" required>
+      <button type="submit">Login</button>
+      <div class="login-links">
+        Don’t have an account? <a href="./signup.html">Sign up</a>
+      </div>
+    </form>
+  </div>
+  <script>
+    const providerMap = {
+      // NGOs
+      'aasara@ngo.com': { type: 'NGO', name: 'Aasara Foundation', password: 'aasara123' },
+      'dhanak@ngo.com': { type: 'NGO', name: 'Dhanak', password: 'dhanak123' },
+      'dhrdnet@ngo.com': { type: 'NGO', name: 'DHRDNet', password: 'dhrd123' },
+      'evidence@ngo.com': { type: 'NGO', name: 'Evidence Madurai', password: 'evidence123' },
+      'love@ngo.com': { type: 'NGO', name: 'Love Commando', password: 'love123' },
+      'manjhi@ngo.com': { type: 'NGO', name: 'Manjhi', password: 'manjhi123' },
+      // Lawyers
+      'anand@lawyer.com': { type: 'LAWYER', name: 'Anand Grover', password: 'anand123' },
+      'colin@lawyer.com': { type: 'LAWYER', name: 'Colin Gonsalves', password: 'colin123' },
+      'indira@lawyer.com': { type: 'LAWYER', name: 'Indira Jaising', password: 'indira123' },
+      'kavita@lawyer.com': { type: 'LAWYER', name: 'Kavita Srivastava', password: 'kavita123' },
+      'rebecca@lawyer.com': { type: 'LAWYER', name: 'Rebecca John', password: 'rebecca123' },
+      'vrinda@lawyer.com': { type: 'LAWYER', name: 'Vrinda Grover', password: 'vrinda123' }
+    };
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const emailInput = this.querySelector('input[type="email"]');
+      const passwordInput = this.querySelector('input[type="password"]');
+      const email = emailInput.value.toLowerCase();
+      const password = passwordInput.value;
+
+      if (providerMap[email]) {
+        if (providerMap[email].password === password) {
+          localStorage.setItem('currentUser', JSON.stringify(providerMap[email]));
+          window.location.href = './provider-dashboard.html';
+        } else {
+          alert('Incorrect password for this provider.');
+        }
+      } else if (email.includes('ngo') && !email.includes('@')) { // Basic heuristic for guest NGO
+        localStorage.setItem('currentUser', JSON.stringify({ type: 'NGO', name: 'Guest NGO' }));
+        window.location.href = './provider-dashboard.html';
+      } else if (email.includes('lawyer') && !email.includes('@')) { // Basic heuristic for guest Lawyer
+        localStorage.setItem('currentUser', JSON.stringify({ type: 'LAWYER', name: 'Guest Lawyer' }));
+        window.location.href = './provider-dashboard.html';
+      } else {
+        // Real user login via backend
+        try {
+          const response = await fetch('https://nambikkai-backend.vercel.app/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            const userData = {
+              type: 'USER',
+              name: data.user.full_name || 'User',
+              email: data.user.email,
+              id: data.user.id,
+              token: data.access_token
+            };
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            window.location.href = './userdashboard.html';
+          } else {
+            alert('Login failed: ' + (data.detail || 'Invalid credentials'));
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred during login. Please check if the server is running.');
+        }
+      }
+    });
+  </script>
+  </div>
+</body>
+
+</html>

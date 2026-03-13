@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Dashboard | Nambikkai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/dashboard-premium.css">
+</head>
+
+
+<body>
+    <header class="header">
+        <div class="logo">NAMBIKKAI</div>
+        <nav class="nav-links">
+            <a href="provider-dashboard.html">All Appointment</a>
+            <a href="login.html" class="logout-link" style="color: white;">Logout</a>
+        </nav>
+    </header>
+    <div class="dashboard">
+        <!-- WELCOME CARD -->
+        <div class="welcome-card">
+            <div>
+                <h2>Welcome, <span id="provider-name">Provider</span> 👋</h2>
+                <p>Manage your appointments and support requests here.</p>
+            </div>
+            <div id="provider-badge" class="badge">NGO</div>
+        </div>
+
+        <!-- PENDING APPOINTMENTS -->
+        <div class="appointments" style="margin-bottom: 40px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--warning);"></div>
+                <h3 style="margin-bottom: 0;">Pending Requests</h3>
+            </div>
+            <table id="pending-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pending-list">
+                    <!-- JS logic will fill this -->
+                </tbody>
+            </table>
+            <div id="no-pending" style="display:none; text-align:center; padding: 20px; color: var(--text-muted);">
+                No pending requests at the moment.
+            </div>
+        </div>
+
+        <!-- ALL APPOINTMENTS HISTORY -->
+        <div class="appointments">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary);"></div>
+                <h3 style="margin-bottom: 0;">Appointment History</h3>
+            </div>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="history-list">
+                    <!-- JS logic will fill this -->
+                </tbody>
+            </table>
+            <div id="no-history" style="display:none; text-align:center; padding: 20px; color: var(--text-muted);">
+                No completed records found.
+            </div>
+        </div>
+    </div>
+    <script src="../javascripts/provider_dashboard.js"></script>
+</body>
+
+</html>

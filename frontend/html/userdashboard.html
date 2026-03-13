@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/userdashboard.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">NAMBIKKAI</div>
+        <nav class="nav-links">
+            <a href="../../index.html">Home</a>
+            <a href="ngo_list.html">NGO's</a>
+            <a href="lawyer_list.html">Lawyers</a>
+            <a href="userdashboard.html">Booking page</a>
+            <a href="book_appointment.html">Book Appointment</a>
+            <a href="login.html" class="logout-link" style="color:white;">Logout</a>
+        </nav>
+    </header>
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+        <!-- WELCOME CARD -->
+        <div class="welcome-card">
+            <div>
+                <h2>Welcome, <span id="username">User</span> 👋</h2>
+                <p>Here you can manage your appointments</p>
+            </div>
+            <a href="book_appointment.html" class="btn">+ Book Appointment</a>
+        </div>
+        <!-- APPOINTMENTS -->
+        <div class="appointments">
+            <h3>Your Appointments</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>NGO's / Lawyers</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="appointment-list">
+                    <!-- JS la irundhu rows varum -->
+                </tbody>
+            </table>
+            <div id="no-appointments" style="display:none; text-align:center; margin-top:20px;">
+                No appointments found.
+            </div>
+        </div>
+    </div>
+    <!-- JS -->
+    <script src="../javascripts/userdashboard.js"></script>
+</body>
+</html>

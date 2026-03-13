@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/book_appointment.css">
+</head>
+
+
+<body>
+    <header class="header">
+        <div class="logo">NAMBIKKAI</div>
+        <nav class="nav-links">
+            <a href="../../index.html">Home</a>
+            <a href="ngo_list.html">NGO's</a>
+            <a href="lawyer_list.html">Lawyers</a>
+            <a href="book_appointment.html">Book Appointment</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h1>Book an Appointment</h1>
+        <p>Schedule a meeting with our team to discuss volunteering, donations, or community support.</p>
+    </section>
+    <section class="appointment-form">
+        <h2>Appointment Form</h2>
+        <form id="appointmentForm">
+            <label>Full Name</label>
+            <input type="text" id="user-name" placeholder="Enter your name" required>
+            <label>Email</label>
+            <input type="email" id="user-email" placeholder="Enter your email" required>
+            <label>Phone</label>
+            <input type="text" id="user-phone" placeholder="Enter your phone">
+            <label>Appointment Type</label>
+            <select id="appointment-type" required>
+                <option value="">Select Option</option>
+                <option value="NGO">NGO</option>
+                <option value="LAWYER">LAWYER</option>
+            </select>
+            <div id="ngo-dropdown" style="display: none;">
+                <label>Select NGO</label>
+                <select id="ngo-select">
+                    <!-- Dynamic -->
+                </select>
+            </div>
+            <div id="lawyer-dropdown" style="display: none;">
+                <label>Select Lawyer</label>
+                <select id="lawyer-select">
+                    <!-- Dynamic -->
+                </select>
+            </div>
+            <label>Date</label>
+            <input type="date" id="app-date" required>
+            <label>Purpose</label>
+            <textarea id="app-purpose" rows="4" placeholder="Write your message..."></textarea>
+            <!-- BUTTONS -->
+            <div class="form-buttons">
+                <a href="../../index.html" class="back-btn">← Back</a>
+                <button type="submit" class="submit-btn">Submit Appointment</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- SUCCESS POPUP -->
+    <div class="popup-overlay" id="successPopup">
+        <div class="popup-content">
+            <div class="popup-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Thank you!</h3>
+            <p>Thank you for your appointment. If they accept your request, you will receive a confirmation or rejection
+                email.</p>
+            <a href="userdashboard.html" class="popup-btn">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">
+            <h4>NAMBIKKAI</h4>
+        </div>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        <div class="copyright">
+            <p>© 2025 NAMBIKKAI. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="../javascripts/data.js"></script>
+    <script>
+        const appointmentType = document.getElementById('appointment-type');
+        const ngoDropdown = document.getElementById('ngo-dropdown');
+        const lawyerDropdown = document.getElementById('lawyer-dropdown');
+        const ngoSelect = document.getElementById('ngo-select');
+        const lawyerSelect = document.getElementById('lawyer-select');
+        const successPopup = document.getElementById('successPopup');
+
+        // Populate dropdowns from data.js
+        function populateDropdowns() {
+            if (window.appData) {
+                if (window.appData.ngos) {
+                    ngoSelect.innerHTML = '<option value="">Select NGO</option>';
+                    window.appData.ngos.forEach(ngo => {
+                        const option = document.createElement('option');
+                        option.value = ngo.name; // Keep display name for matching
+                        option.textContent = ngo.name;
+                        ngoSelect.appendChild(option);
+                    });
+                }
+                if (window.appData.lawyers) {
+                    lawyerSelect.innerHTML = '<option value="">Select Lawyer</option>';
+                    window.appData.lawyers.forEach(lawyer => {
+                        const option = document.createElement('option');
+                        option.value = lawyer.name; // Keep display name for matching
+                        option.textContent = lawyer.name;
+                        lawyerSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+        populateDropdowns();
+
+        // Pre-fill user data if logged in and restrict date to today or later
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('currentUser');
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                if (user.type === 'USER') {
+                    document.getElementById('user-name').value = user.name || '';
+                    document.getElementById('user-email').value = user.email || '';
+                }
+            }
+
+            // Prevent selecting past dates for appointments
+            const dateInput = document.getElementById('app-date');
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+        });
+
+        appointmentType.addEventListener('change', function () {
+            const value = this.value;
+            if (value === 'NGO') {
+                ngoDropdown.style.display = 'block';
+                lawyerDropdown.style.display = 'none';
+                ngoSelect.required = true;
+                lawyerSelect.required = false;
+            } else if (value === 'LAWYER') {
+                ngoDropdown.style.display = 'none';
+                lawyerDropdown.style.display = 'block';
+                lawyerSelect.required = true;
+                ngoSelect.required = false;
+            } else {
+                ngoDropdown.style.display = 'none';
+                lawyerDropdown.style.display = 'none';
+                ngoSelect.required = false;
+                lawyerSelect.required = false;
+            }
+        });
+
+        // FORM SUBMISSION LOGIC
+        document.getElementById('appointmentForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const type = appointmentType.value;
+            const providerName = type === 'NGO' ? ngoSelect.value : lawyerSelect.value;
+
+            const loggedInUser = localStorage.getItem('currentUser');
+            let userId = null;
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                userId = user.id;
+            }
+
+            // 1. Prepare data for Backend
+            const appointmentData = {
+                user_id: userId,
+                full_name: document.getElementById('user-name').value,
+                email: document.getElementById('user-email').value,
+                phone: document.getElementById('user-phone').value,
+                appointment_type: type,
+                provider_name: providerName,
+                appointment_date: document.getElementById('app-date').value,
+                purpose: document.getElementById('app-purpose').value,
+                status: 'Pending'
+            };
+
+            try {
+                // 2. POST to Backend API
+                const response = await fetch('https://nambikkai-backend.vercel.app/api/appointments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(appointmentData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Server error: ' + response.status);
+                }
+
+                const data = await response.json();
+                console.log('Backend Success:', data);
+
+                // 3. Optional: Sync with LocalStorage for the dashboard to show it immediately
+                let localApps = JSON.parse(localStorage.getItem('all_appointments')) || [];
+                localApps.push(data);
+                localStorage.setItem('all_appointments', JSON.stringify(localApps));
+
+                // Show Success Popup
+                successPopup.classList.add('active');
+                this.reset();
+
+            } catch (error) {
+                console.error('Submission Error:', error);
+                alert('Connection failed. Data will be saved locally only.');
+
+                // Fallback to local storage if backend is down
+                let localApps = JSON.parse(localStorage.getItem('all_appointments')) || [];
+                localApps.push({ ...appointmentData, id: Date.now() });
+                localStorage.setItem('all_appointments', JSON.stringify(localApps));
+
+                successPopup.classList.add('active');
+                this.reset();
+            }
+        });
+    </script>
+</body>
+
+</html>
