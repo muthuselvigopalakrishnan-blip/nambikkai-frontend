@@ -36,19 +36,19 @@
   <script>
     const providerMap = {
       // NGOs
-      'aasara@ngo.com': { type: 'NGO', name: 'Aasara Foundation', password: 'aasara123' },
-      'dhanak@ngo.com': { type: 'NGO', name: 'Dhanak', password: 'dhanak123' },
-      'dhrdnet@ngo.com': { type: 'NGO', name: 'DHRDNet', password: 'dhrd123' },
-      'evidence@ngo.com': { type: 'NGO', name: 'Evidence Madurai', password: 'evidence123' },
-      'love@ngo.com': { type: 'NGO', name: 'Love Commando', password: 'love123' },
-      'manjhi@ngo.com': { type: 'NGO', name: 'Manjhi', password: 'manjhi123' },
+      'aasara@ngo.com': { id: 1, type: 'NGO', name: 'Aasara Foundation', email: 'aasara@ngo.com', password: 'aasara123' },
+      'dhanak@ngo.com': { id: 2, type: 'NGO', name: 'Dhanak', email: 'dhanak@ngo.com', password: 'dhanak123' },
+      'dhrdnet@ngo.com': { id: 3, type: 'NGO', name: 'DHRDNet', email: 'dhrdnet@ngo.com', password: 'dhrd123' },
+      'evidence@ngo.com': { id: 4, type: 'NGO', name: 'Evidence Madurai', email: 'evidence@ngo.com', password: 'evidence123' },
+      'love@ngo.com': { id: 5, type: 'NGO', name: 'Love Commando', email: 'love@ngo.com', password: 'love123' },
+      'manjhi@ngo.com': { id: 6, type: 'NGO', name: 'Manjhi', email: 'manjhi@ngo.com', password: 'manjhi123' },
       // Lawyers
-      'anand@lawyer.com': { type: 'LAWYER', name: 'Anand Grover', password: 'anand123' },
-      'colin@lawyer.com': { type: 'LAWYER', name: 'Colin Gonsalves', password: 'colin123' },
-      'indira@lawyer.com': { type: 'LAWYER', name: 'Indira Jaising', password: 'indira123' },
-      'kavita@lawyer.com': { type: 'LAWYER', name: 'Kavita Srivastava', password: 'kavita123' },
-      'rebecca@lawyer.com': { type: 'LAWYER', name: 'Rebecca John', password: 'rebecca123' },
-      'vrinda@lawyer.com': { type: 'LAWYER', name: 'Vrinda Grover', password: 'vrinda123' }
+      'anand@lawyer.com': { id: 7, type: 'LAWYER', name: 'Anand Grover', email: 'anand@lawyer.com', password: 'anand123' },
+      'colin@lawyer.com': { id: 8, type: 'LAWYER', name: 'Colin Gonsalves', email: 'colin@lawyer.com', password: 'colin123' },
+      'indira@lawyer.com': { id: 9, type: 'LAWYER', name: 'Indira Jaising', email: 'indira@lawyer.com', password: 'indira123' },
+      'kavita@lawyer.com': { id: 10, type: 'LAWYER', name: 'Kavita Srivastava', email: 'kavita@lawyer.com', password: 'kavita123' },
+      'rebecca@lawyer.com': { id: 11, type: 'LAWYER', name: 'Rebecca John', email: 'rebecca@lawyer.com', password: 'rebecca123' },
+      'vrinda@lawyer.com': { id: 12, type: 'LAWYER', name: 'Vrinda Grover', email: 'vrinda@lawyer.com', password: 'vrinda123' }
     };
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -59,17 +59,28 @@
 
       if (providerMap[email]) {
         if (providerMap[email].password === password) {
-          localStorage.setItem('currentUser', JSON.stringify(providerMap[email]));
-          window.location.href = './provider-dashboard.html';
+          const providerData = providerMap[email];
+          console.log('Provider login successful:', providerData);
+          localStorage.setItem('currentUser', JSON.stringify(providerData));
+          console.log('Stored in localStorage:', localStorage.getItem('currentUser'));
+          setTimeout(() => {
+            window.location.href = './provider-dashboard.html';
+          }, 100);
         } else {
           alert('Incorrect password for this provider.');
         }
-      } else if (email.includes('ngo') && !email.includes('@')) { // Basic heuristic for guest NGO
-        localStorage.setItem('currentUser', JSON.stringify({ type: 'NGO', name: 'Guest NGO' }));
-        window.location.href = './provider-dashboard.html';
-      } else if (email.includes('lawyer') && !email.includes('@')) { // Basic heuristic for guest Lawyer
-        localStorage.setItem('currentUser', JSON.stringify({ type: 'LAWYER', name: 'Guest Lawyer' }));
-        window.location.href = './provider-dashboard.html';
+      } else if (email.includes('ngo') && !email.includes('@')) {
+        const guestData = { type: 'NGO', name: 'Guest NGO', id: 100, email: 'guest@ngo' };
+        localStorage.setItem('currentUser', JSON.stringify(guestData));
+        setTimeout(() => {
+          window.location.href = './provider-dashboard.html';
+        }, 100);
+      } else if (email.includes('lawyer') && !email.includes('@')) {
+        const guestData = { type: 'LAWYER', name: 'Guest Lawyer', id: 101, email: 'guest@lawyer' };
+        localStorage.setItem('currentUser', JSON.stringify(guestData));
+        setTimeout(() => {
+          window.location.href = './provider-dashboard.html';
+        }, 100);
       } else {
         // Real user login via backend
         try {
