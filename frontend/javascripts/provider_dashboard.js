@@ -146,7 +146,7 @@ async function renderDashboard(provider) {
 
     try {
         // 3. Fetch Data from Backend
-        const response = await fetch(`https://nambikkai-backend.vercel.app/api/appointments?provider_name=${encodeURIComponent(provider.name)}`);
+        const response = await fetch(`http://localhost:8000/api/appointments?provider_name=${encodeURIComponent(provider.name)}`);
         const dbAppointments = response.ok ? await response.json() : [];
 
         // 4. Split Data into Pending vs History
@@ -217,7 +217,7 @@ async function renderDashboard(provider) {
 // Global functions for actions
 window.updateStatus = async (id, newStatus, userName, userEmail, appDate) => {
     try {
-        const response = await fetch(`https://nambikkai-backend.vercel.app/api/appointments/${id}/status`, {
+        const response = await fetch(`http://localhost:8000/api/appointments/${id}/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
