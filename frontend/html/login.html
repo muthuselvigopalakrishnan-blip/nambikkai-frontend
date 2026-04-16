@@ -60,8 +60,10 @@
       if (providerMap[email]) {
         if (providerMap[email].password === password) {
           const providerData = providerMap[email];
-          console.log('Provider login successful:', providerData);
-          localStorage.setItem('currentUser', JSON.stringify(providerData));
+          // Remove password before storing
+          const { password: _, ...safeProviderData } = providerData;
+          console.log('Provider login successful:', safeProviderData);
+          localStorage.setItem('currentUser', JSON.stringify(safeProviderData));
           console.log('Stored in localStorage:', localStorage.getItem('currentUser'));
           setTimeout(() => {
             window.location.href = './provider-dashboard.html';
@@ -71,12 +73,14 @@
         }
       } else if (email.includes('ngo') && !email.includes('@')) {
         const guestData = { type: 'NGO', name: 'Guest NGO', id: 100, email: 'guest@ngo' };
+        console.log('Guest NGO login');
         localStorage.setItem('currentUser', JSON.stringify(guestData));
         setTimeout(() => {
           window.location.href = './provider-dashboard.html';
         }, 100);
       } else if (email.includes('lawyer') && !email.includes('@')) {
         const guestData = { type: 'LAWYER', name: 'Guest Lawyer', id: 101, email: 'guest@lawyer' };
+        console.log('Guest Lawyer login');
         localStorage.setItem('currentUser', JSON.stringify(guestData));
         setTimeout(() => {
           window.location.href = './provider-dashboard.html';
