@@ -82,7 +82,7 @@ async function loadAppointments(currentUserName) {
 
   try {
     // 1. Fetch from Backend
-    const response = await fetch(`http://localhost:8000/api/appointments?email=${user.email}`);
+    const response = await fetch(`https://nambikkai-backend.vercel.app/api/appointments?email=${user.email}`);
     let dbAppointments = [];
     if (response.ok) {
       dbAppointments = await response.json();
