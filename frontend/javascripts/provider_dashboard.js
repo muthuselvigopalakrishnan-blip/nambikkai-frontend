@@ -131,11 +131,11 @@ async function renderDashboard(provider) {
     console.log('Provider object:', provider);
     console.log('Provider name:', provider.name);
     console.log('Provider type:', provider.type);
-    
+
     // 1. Update Header & Badge
     const providerNameEl = document.getElementById("provider-name");
     const providerBadgeEl = document.getElementById("provider-badge");
-    
+
     if (providerNameEl) {
         providerNameEl.innerText = provider.name || 'Provider';
         console.log('Set provider name to:', providerNameEl.innerText);
@@ -155,8 +155,11 @@ async function renderDashboard(provider) {
 
     try {
         // 3. Fetch Data from Backend
-        const response = await fetch(`https://nambikkai-backend.vercel.app/api/appointments?provider_name=${encodeURIComponent(provider.name)}`, {
+        console.log('Fetching appointments for provider:', provider.name);
+        const response = await fetch(`https://nambikkai-backend.vercel.app/api/appointments?provider_name=${encodeURIComponent(provider.name)}`);
+        console.log('Fetch response status:', response.status);
         const dbAppointments = response.ok ? await response.json() : [];
+        console.log('Fetched appointments:', dbAppointments);
 
         // 4. Split Data into Pending vs History
         const pendingData = dbAppointments.filter(app => (app.status || 'Pending').toLowerCase() === 'pending');

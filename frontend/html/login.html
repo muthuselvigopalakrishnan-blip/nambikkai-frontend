@@ -62,7 +62,12 @@
           const providerData = providerMap[email];
           console.log('Original provider data:', providerData);
           // Remove password before storing
-          const { password: _, ...safeProviderData } = providerData;
+          const safeProviderData = {
+            id: providerData.id,
+            type: providerData.type,
+            name: providerData.name,
+            email: providerData.email
+          };
           console.log('Safe provider data (without password):', safeProviderData);
           console.log('Provider name field:', safeProviderData.name);
           localStorage.setItem('currentUser', JSON.stringify(safeProviderData));
