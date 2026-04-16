@@ -127,13 +127,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function renderDashboard(provider) {
+    // DEBUG: Log provider object
+    console.log('Provider object:', provider);
+    console.log('Provider name:', provider.name);
+    console.log('Provider type:', provider.type);
+    
     // 1. Update Header & Badge
     const providerNameEl = document.getElementById("provider-name");
     const providerBadgeEl = document.getElementById("provider-badge");
-    if (providerNameEl) providerNameEl.innerText = provider.name;
+    
+    if (providerNameEl) {
+        providerNameEl.innerText = provider.name || 'Provider';
+        console.log('Set provider name to:', providerNameEl.innerText);
+    }
     if (providerBadgeEl) {
-        providerBadgeEl.innerText = provider.type;
-        providerBadgeEl.className = `badge ${provider.type.toLowerCase()}`;
+        providerBadgeEl.innerText = provider.type || 'UNKNOWN';
+        providerBadgeEl.className = `badge ${(provider.type || 'unknown').toLowerCase()}`;
     }
 
     // 2. DOM Elements for Tables

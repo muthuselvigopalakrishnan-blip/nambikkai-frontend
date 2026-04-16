@@ -60,11 +60,15 @@
       if (providerMap[email]) {
         if (providerMap[email].password === password) {
           const providerData = providerMap[email];
+          console.log('Original provider data:', providerData);
           // Remove password before storing
           const { password: _, ...safeProviderData } = providerData;
-          console.log('Provider login successful:', safeProviderData);
+          console.log('Safe provider data (without password):', safeProviderData);
+          console.log('Provider name field:', safeProviderData.name);
           localStorage.setItem('currentUser', JSON.stringify(safeProviderData));
-          console.log('Stored in localStorage:', localStorage.getItem('currentUser'));
+          const stored = localStorage.getItem('currentUser');
+          console.log('Verified stored data:', stored);
+          console.log('Parsed back:', JSON.parse(stored));
           setTimeout(() => {
             window.location.href = './provider-dashboard.html';
           }, 100);
